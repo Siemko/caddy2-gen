@@ -1,0 +1,27 @@
+version: "3.7"
+services:
+  caddy-gen:
+    container_name: caddy2-gen
+    build: .
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    ports:
+      - "80:80"
+      - "443:443"
+      - "2015:2015"
+    depends_on:
+      - whoami
+      - whoami2
+
+  whoami:
+    image: "katacoda/docker-http-server:v1"
+    labels:
+      - "virtual.host=test1.localhost"
+
+  whoami2:
+    image: "katacoda/docker-http-server:v2"
+    labels:
+      - "virtual.host=test2.localhost"
+      - "virtual.auth.username=admin" # Optionally add http basic authentication
+      - "virtual.auth.password=JDJ5JDEyJHoySi8wbWoyLnFnUWJxTmlTOVJwNC55Rk44ZmFWMndsRjRkREV3VmNPdWRzNjFCRW1sRm9DCg==" # By specifying both username and base64 of bcrypted (12 rounds) password

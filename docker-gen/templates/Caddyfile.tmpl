@@ -1,0 +1,58 @@
+{{ $hosts := groupByLabel $ "virtual.host" }}
+
+{{ if not $hosts }}
+
+127.0.0.1:2015
+log stdout
+errors stderr
+
+{{ else }}
+
+{{ range $h, $containers := $hosts }}
+{{ $c := first $containers }}
+{{ $allhosts := trim (index $c.Labels "virtual.host") }}
+{{ range $t, $host := split $allhosts " " }}
+{{ $tlsEmail := trim (index $c.Labels "virtual.tls-email") }}
+{{ $tlsConfig := trim (index $c.Labels "virtual.tls") }}
+{{ $tlsEnv := or $tlsEmail $tlsConfig }}
+{{ $tlsOff := eq $tlsEnv "" }}
+{{ $tlsOn := ne $tlsEnv "" }}
+{{ $alias := trim (index $c.Labels "virtual.alias") }}
+{{ $aliasPresent := ne $alias "" }}
+{{ $authUsername := trim (index $c.Labels "virtual.auth.username") }}
+{{ $authPassword := trim (index $c.Labels "virtual.auth.password") }}
+{{ $basicauth := and (ne $authUsername "") (ne $authPassword "") }}
+
+{{ if $aliasPresent  }}
+{{ if $tlsOff }}http://{{ end }}{{ $alias }} {
+  redir {{ if $tlsOff }}http://{{ else }}https://{{ end }}{{ $host }}
+}
+{{ end }}
+
+{{ if $tlsOff }}http://{{ end }}{{ $host }} {
+  {{ if $tlsOn }}tls {{ $tlsEnv }}{{ end }}
+
+  {{ if $basicauth }}
+  basicauth / {
+      {{ $authUsername }} {{ $authPassword }}
+  }
+  {{ end }}
+  reverse_proxy {
+    lb_policy round_robin
+    {{ range $i, $container := $containers }}
+    {{ range $j, $net := $container.Networks }}
+    {{ $port := index $container.Labels "virtual.port" }}
+    to {{ $net.IP }}:{{ if $port }}{{ trim $port }}{{ else }}80{{ end }}
+    {{ end }}
+    {{ end }}
+  }
+
+  encode zstd gzip
+  log {
+    output stdout
+  }
+}
+{{ end }}
+{{ end }}
+
+{{ end }}
