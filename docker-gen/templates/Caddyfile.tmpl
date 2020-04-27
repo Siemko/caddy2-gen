@@ -3,8 +3,10 @@
 {{ if not $hosts }}
 
 127.0.0.1:2015
-log stdout
-errors stderr
+log {
+    output stdout
+}
+
 
 {{ else }}
 

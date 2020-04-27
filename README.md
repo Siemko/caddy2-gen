@@ -23,10 +23,6 @@ Password should be a string `base64` encoded from `bcrypt` hash. You can use htt
 
 ## Backing up certificates
 
-```
->>> ------------- <<<
->>> NEEDS TESTING <<<
->>> ------------- <<<
-```
+To backup certificates make a volume:
 
-Certificates are stored in `/etc/caddy/acme/` and `/etc/caddy/ocsp` folders. Make them volumes to save them on your host machine.
+`./caddy-info:/data/caddy`

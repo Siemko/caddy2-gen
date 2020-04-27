@@ -6,10 +6,10 @@ services:
     restart: always
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./caddy-info:/data/caddy
     ports:
       - "80:80"
       - "443:443"
-      - "2015:2015"
     depends_on:
       - whoami
       - whoami2
