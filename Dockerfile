@@ -15,7 +15,7 @@ RUN apk update && apk upgrade \
     && chmod u+x /usr/bin/forego \
     && wget --quiet "https://github.com/jwilder/docker-gen/releases/download/${DOCKER_GEN_VERSION}/docker-gen-alpine-linux-amd64-${DOCKER_GEN_VERSION}.tar.gz" \
     && tar -C /usr/bin -xvzf "docker-gen-alpine-linux-amd64-${DOCKER_GEN_VERSION}.tar.gz" \
-    && rm "/docker-gen-alpine-linux-amd64-${DOCKER_GEN_VERSION}.tar.gz" \
+    && rm "docker-gen-alpine-linux-amd64-${DOCKER_GEN_VERSION}.tar.gz" \
     && apk del .build-dependencies
 
 EXPOSE 80 443 2015
