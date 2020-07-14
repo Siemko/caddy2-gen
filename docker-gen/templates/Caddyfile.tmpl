@@ -5,6 +5,7 @@
 127.0.0.1:2015
 log {
     output stdout
+    format console
 }
 
 
@@ -52,6 +53,7 @@ log {
   encode zstd gzip
   log {
     output stdout
+    format console
   }
 }
 {{ end }}
