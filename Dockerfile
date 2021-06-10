@@ -1,4 +1,9 @@
-FROM caddy:2.1.1
+FROM caddy:2.4.1-builder-alpine AS builder
+RUN xcaddy build --with github.com/ueffel/caddy-brotli
+
+FROM caddy:2.4.1-alpine
+
+COPY --from=builder /usr/bin/caddy /usr/bin/caddy
 
 ARG DOCKER_GEN_VERSION="0.7.4"
 ARG FOREGO_VERSION="0.16.1"
@@ -22,7 +27,9 @@ EXPOSE 80 443 2015
 VOLUME /etc/caddy
 
 COPY . /code
+COPY ./docker-gen/templates/Caddyfile.tmpl /code/docker-gen/templates/Caddyfile.bkp
 WORKDIR /code
+
 
 ENTRYPOINT ["sh", "/code/docker-entrypoint.sh"]
 CMD ["/usr/bin/forego", "start", "-r"]

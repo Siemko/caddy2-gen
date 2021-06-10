@@ -17,12 +17,17 @@ services:
   whoami:
     image: "katacoda/docker-http-server:v1"
     labels:
-      - "virtual.host=test1.localhost"
+      virtual.host: test1.localhost
+      # don't forget to set CSP
+      virtual.proxy.directives: |
+        header_down strict-transport-security "max-age=63072000; includeSubdomains; preload;"
+        header_down x-content-type-options "nosniff"
+        header_down x-frame-options "DENY"
+        header_down x-xss-protection "1; mode=block"
+        header_down referrer-policy "same-origin"
+        header_down cross-origin-opener-policy "same-origin"
 
   whoami2:
     image: "katacoda/docker-http-server:v2"
     labels:
-      - "virtual.host=myapp.com example.com" # your domains separated with a space
-      - "virtual.alias=www.myapp.com" # alias for your domain (optional)
-      - "virtual.port=80" # exposed port of this container
-      - "virtual.tls-email=admin@myapp.com" # ssl is now on
+      - "virtual.host=test2.localhost"
