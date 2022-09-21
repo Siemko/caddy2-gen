@@ -27,7 +27,7 @@ RUN git clone https://github.com/nginx-proxy/docker-gen \
    && cd - \
    && rm -rf /go/docker-gen
 
-FROM caddy:2.4.6-builder-alpine AS builder
+FROM caddy:2.6.0-builder-alpine AS builder
 RUN xcaddy build --with github.com/ueffel/caddy-brotli
 
 FROM builder as caddy
