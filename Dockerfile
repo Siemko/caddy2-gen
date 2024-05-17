@@ -1,7 +1,7 @@
-ARG DOCKER_GEN_VERSION="0.8.4"
-ARG FOREGO_VERSION="v0.17.0"
+ARG DOCKER_GEN_VERSION="0.13.1"
+ARG FOREGO_VERSION="v0.18.1"
 
-FROM golang:1.20.1 as gobuilder
+FROM golang:1.22.3 as gobuilder
 
 FROM gobuilder as forego
 ARG FOREGO_VERSION
@@ -27,7 +27,7 @@ RUN git clone https://github.com/nginx-proxy/docker-gen \
    && cd - \
    && rm -rf /go/docker-gen
 
-FROM caddy:2.6.4-builder-alpine AS builder
+FROM caddy:2.7.6-builder-alpine AS builder
 RUN xcaddy build --with github.com/ueffel/caddy-brotli
 
 FROM builder as caddy
