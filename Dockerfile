@@ -1,7 +1,7 @@
 ARG DOCKER_GEN_VERSION="0.13.1"
 ARG FOREGO_VERSION="v0.18.1"
 
-FROM golang:1.22.4 as gobuilder
+FROM golang:1.23.0 as gobuilder
 
 FROM gobuilder as forego
 ARG FOREGO_VERSION
